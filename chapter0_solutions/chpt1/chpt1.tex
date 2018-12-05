@@ -1,0 +1,284 @@
+\begin{problem}{VI.1} In pseudocode and Python:
+
+
+\begin{algorithmic}[0]
+\Function{product}{a, b}
+\State $\text{sum} = 0$
+    \For{$i = 0 \text{ to } \text{b}-1$}
+      \State $\text{sum} = \text{sum}+ \text{a}$
+    \EndFor
+\State \Return sum
+  \EndFunction
+\end{algorithmic}
+
+
+
+\begin{lstlisting}[language=Python]
+def product(a, b):
+	summ = 0
+	for i in range(b):
+		summ += a
+	return summ
+\end{lstlisting}
+
+The work done within the look is constant time, and the loop is run b times, and therefore the runtime is $O$(b).
+
+
+\end{problem}
+
+
+\begin{problem}{VI.2} In pseudocode and Python:
+
+
+\begin{algorithmic}[0]
+\Function{power}{a, b}
+\If{b$<0$} \State{ \Return 0 }
+\ElsIf{b $=0 $}
+\State{ \Return 1 }
+\Else
+\State{ \Return a*power(a)}
+	\State{ \Return a*power(a, b-1)}
+\EndIf
+  \EndFunction
+\end{algorithmic}
+
+
+
+
+\begin{lstlisting}[language=Python]
+def power(a, b)
+	if b < 0:
+		return 0
+	elif b == 0:
+		return 1
+	else:
+		return a*power(a, b - 1)
+\end{lstlisting}
+
+This is a recursive algorithm to compute $a^b$.  The run time time can be described by the recursion relation $T(b) = T(b-1)+c$, where $c$ is the constant amount of work representing the if statements as well as the multiplication of a by power(a, b-1).  As specified in the algorithm, the base case is $T(0)=1$, which we can use to solve for the fun time:
+\begin{align*}
+   T_{b} &= T(b-1) + c \\
+    &= T(b-2) + c+c \\
+   &~\vdots\\
+   &= T(b-b) + bc \\
+   &= O(1) + O(b) \\
+   &= O(b).
+\end{align*}
+\end{problem}
+
+\begin{problem}{VI.3} In pseudocode and Python:
+
+
+\begin{algorithmic}[0]
+\Function{mod}{a, b}
+\If{$\text{b}\le0$} \State{ \Return -1 }
+\EndIf
+      \State div = a/b
+      \State {\Return a - div*b }
+  \EndFunction
+\end{algorithmic}
+
+\begin{lstlisting}[language=Python]
+def mod(a, b):
+	if b <= 0:
+		return -1
+	div = a//b
+	return a - div*b
+\end{lstlisting}
+All of the operations are done in constant time, and thus the algorithm runs in $O(1)$.
+
+
+\end{problem}
+
+
+\begin{problem}{VI.4} In pseudocode and Python:
+
+
+\begin{algorithmic}[0]
+\Function{div}{a, b}
+\State count = 0
+\State sum = 0
+    \While{$\text{sum} \le \text{a}$}
+      \State $\text{sum} = \text{sum}+ \text{b}$
+      \State $\text{count} = \text{count}+ \text{1}$
+    \EndWhile
+    \State {\Return count}
+  \EndFunction
+\end{algorithmic}
+
+\begin{lstlisting}[language=Python]
+def div(a, b):
+	count = 0
+	summ = 0
+	while summ <= a:
+		summ += b
+		count += 1
+	return count
+\end{lstlisting}
+The work performed in the while loop is constant time, and the number of loops the loop performs is $\floor{a/b}$, and therefore the runtime is $O(\floor{a/b})$.
+
+
+\end{problem}
+
+
+
+
+\begin{problem}{VI.5} In pseudocode and Python:
+
+
+\begin{algorithmic}[0]
+\Function{sqrt}{n}
+    \State {\Return sqrt\_helper(n, 1, n)}
+  \EndFunction
+  \\
+  
+ \Function{sqrt\_helper}{n, min, max}
+    \If{$\text{max} < \text{min}$} \State{ \Return -1 }
+    \EndIf
+    \State guess = $(\text{min} + \text{max})/2$
+     \If{$\text{guess}*\text{guess} = n$} \State{ \Return guess }
+     \ElsIf{$\text{guess}*\text{guess} < n$} 
+     \State{ \Return sqrt\_helper(n, guess+1, max)}
+     \Else
+      \State{ \Return sqrt\_helper(n, min, guess-1)}
+    \EndIf
+  \EndFunction
+\end{algorithmic}
+
+\begin{lstlisting}[language=Python]
+def sqrt(n):
+	return sqrt_helper(n, 1, n)
+	
+def sqrt_helper(n, minn, maxx):
+	if maxx < minn:
+		return -1
+	guess = (minn + maxx)//2
+	if guess*guess == n:
+		return guess
+	elif guess*guess < n:
+		return sqrt_helper(n, guess + 1, maxx):
+	else:
+		return sqrt_helper(n, minn, guess - 1):
+\end{lstlisting}
+I will calculate the worst-case runtime, $T(n)$.  We see that when we call sqrt\_helper for a number $n$ a constant amount of work is done for the arithmetic and if statements plus the amount of work done on a number half as big as $n$.  This is because the next call searches a region half as large as the first call (note that this is the case for either of the cases when the guess is too big or when the guess is too small).  Therefore, the following recurrence describes the worst-case run time of the algorithm: $T(n) = T(n/2)+c$ with $T(1) = O(1)$ (the base case corresponds to when the range over which to search is a single number, in which case the square root is definitely found).  Solving the recurrence:
+\begin{align*}
+   T_{n} &= T\left(\frac{n}{2}\right) + c \\
+    &= T\left(\frac{n}{4}\right) + c +c\\
+    &= T\left(\frac{n}{8}\right) + c +c+c\\
+   &~\vdots\\
+   &= T\left(\frac{n}{2^k}\right) + kc.
+\end{align*}
+We can solve for the value of $k$ which gets down to the base case by setting $n/2^k$ equal to 1 and solving for $k$ ($ = \lg n$).  Plugging the base case in:
+\begin{align*}
+   T_{n} &= O(1) + c \lg n \\
+    &= T\left(\frac{n}{4}\right) + c +c\\
+    &= O(\lg n).
+\end{align*}
+The naive implementation of this algorithm would be to do a linear search over the range 1 to $n$, checking at each iteration whether that number squared is equal to $n$.  Clearly this results in a time complexity of $\sqrt{n}$, which is worse than the algorithm above.
+
+
+\end{problem}
+
+
+
+\begin{problem}{VI.6} In pseudocode and Python:
+
+\begin{algorithmic}[0]
+\Function{sqrt}{n}
+\State $\text{guess} =1$ 
+\While{$\text{guess}*\text{guess} \le n$}
+\If{guess*guess = n} \State {\Return guess}
+\EndIf
+\State guess = guess +1
+\EndWhile
+\State {\Return -1}
+  \EndFunction
+\end{algorithmic}
+
+\begin{lstlisting}[language=Python]
+def sqrt(n):
+	while guess*guess <= n:
+		if guess*guess == n:
+			return guess
+		guess += 1
+	return -1
+\end{lstlisting}
+
+Note that this is the linear scan method and as mentioned above it will have a run time of $O(\sqrt{n})$ since we find the square root by on the $\sqrt{n}$ iteration of the loop and we do constant work in each call. 
+
+\end{problem}
+\begin{problem}{VI.9} In pseudocode and Python:
+
+
+\begin{algorithmic}[0]
+\Function{copyArray}{$arr$}
+\State Let $\text{copy}[\cdot] \text{ be a new, empty array}$ 
+\For{$ i = 0 \text{ to }  arr.length-1$}
+\State copy = appendToNew(copy, $arr[i]$)
+\EndFor
+\State {\Return copy}
+  \EndFunction
+\\
+\Function{appendToNew}{$arr, value$}
+\State Let $\text{bigger}[0\ldots arr.length] \text{ be a new array}$ 
+\For{$ i = 0 \text{ to }  arr.length$}
+\State $\text{bigger}[i] = arr[i] $ 
+\EndFor
+\State $\text{bigger}[\text{bigger}.length -1] = value$ 
+\State {\Return $\text{bigger}$}
+  \EndFunction
+\end{algorithmic}
+
+
+\begin{lstlisting}[language=Python]
+def copyArray(arr):
+	copy = []
+	for val in arr:
+		copy = appendToNew(copy, val)
+	return copy
+\end{lstlisting}
+
+
+\begin{lstlisting}[language=Python]
+def appendToNew(arr, value):
+	bigger = [0]*(len(arr)+1)
+	for i in range(len(arr)):
+		bigger[i] = arr[i]
+	bigger[len(bigger)-1] = value
+	return bigger
+\end{lstlisting}
+
+\end{problem}
+
+
+\begin{problem}{VI.10} In pseudocode and Python:
+
+
+\begin{algorithmic}[0]
+\Function{sumDigits}{$n$}
+\State $sum = 0$ 
+\While{$ n>0$}
+\State $sum = sum + n~\%~10$
+\State $n= n//10$
+\EndWhile
+\State {\Return sum}
+  \EndFunction
+  \end{algorithmic}
+  
+  \begin{lstlisting}[language=Python]
+def sumDigits(n)
+	summ=0
+	while n > 0:
+		summ = summ + n % 10
+		n = n//10
+	return summ
+\end{lstlisting}
+
+We see that in this program, the while loop results in the following sequence for $n$: $n, n/10, n/(10^2), \ldots n/(10^k)$, where $k$ is the smallest integer such that $n/10^k \ge 1$.  Note that $k$ is the number of times the loop executes.  Solving for $k$ I find that $k = \floor{\log{n}} = O(\lg n)$.  Since there is a constant time amount of work done in each iteration of the loop, the running time is therefore $O(\lg n)$.
+  
+  \end{problem}
+  
+  \begin{problem}{VI.12} First sorting the array, $B$, takes $O(b\lg b)$ time, and then iterating through $a$ and checking via binary search whether the element is also in $B$ takes $O(a)O(\lg b)$ time (where the first term comes from iterating through $A$ and the second term comes from performing a binary search in $B$).  Thus we have the total running time of the algorithm as $O(b\lg b + a \lg b)$.
+  
+    \end{problem}
+
